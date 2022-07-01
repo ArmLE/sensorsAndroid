@@ -27,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
     float[] magnetometerReading = new float[3];
 
     public float[] rotationMatrix = new float[9];
+    public float[] inclinationMatrix = new float[9];
     public float[] orientationAngles = new float[]{0,0,0};
+    public float inclinacion = 0;
 
     private class PointGravity{
         public TextView x;
@@ -86,9 +88,10 @@ public class MainActivity extends AppCompatActivity {
             */
             start();
 
-            SensorManager.getRotationMatrix(rotationMatrix, null,
+            SensorManager.getRotationMatrix(rotationMatrix, inclinationMatrix,
                     accelerometerReading, magnetometerReading);
             SensorManager.getOrientation(rotationMatrix, orientationAngles);
+            inclinacion = SensorManager.getInclination(inclinationMatrix);
 
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 System.arraycopy(event.values, 0, accelerometerReading,
@@ -135,9 +138,10 @@ public class MainActivity extends AppCompatActivity {
 
             System.out.println(Arrays.toString(orientationAngles));
 
-            pg.x.setText(String.valueOf(orientationAngles[0]*57.2958));
-            pg.y.setText(String.valueOf(orientationAngles[1]*57.2958));
-            pg.z.setText(String.valueOf(orientationAngles[2]*57.2958));
+            pg.x.setText(String.valueOf(Math.toDegrees(orientationAngles[0])));
+            pg.y.setText(String.valueOf(Math.toDegrees(orientationAngles[1])));
+            pg.z.setText(String.valueOf(Math.toDegrees(orientationAngles[2])));
+            pm.x.setText(String.valueOf(Math.toDegrees(inclinacion)));
         }
 
         @Override
