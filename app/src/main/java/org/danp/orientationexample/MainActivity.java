@@ -44,13 +44,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private class PointMagnetic{
         public TextView x;
-        public TextView y;
-        public TextView z;
 
-        public PointMagnetic(TextView x, TextView y, TextView z) {
+        public PointMagnetic(TextView x) {
             this.x = x;
-            this.y = y;
-            this.z = z;
         }
     }
 
@@ -76,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
       sensorManager.registerListener(sensorEventListener, sensorMag,SensorManager.SENSOR_DELAY_NORMAL);
       */
       pg = new PointGravity((TextView)findViewById(R.id.gX),(TextView)findViewById(R.id.gY),(TextView)findViewById(R.id.gZ));
-      pm = new PointMagnetic((TextView)findViewById(R.id.mX),(TextView)findViewById(R.id.mY),(TextView)findViewById(R.id.mZ));
+      pm = new PointMagnetic((TextView)findViewById(R.id.mX));
     }
 
     private SensorEventListener sensorEventListener = new SensorEventListener() {
