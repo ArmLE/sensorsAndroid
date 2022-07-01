@@ -134,10 +134,10 @@ public class MainActivity extends AppCompatActivity {
 
             System.out.println(Arrays.toString(orientationAngles));
 
-            pg.x.setText(String.valueOf(Math.toDegrees(orientationAngles[0])));
-            pg.y.setText(String.valueOf(Math.toDegrees(orientationAngles[1])));
-            pg.z.setText(String.valueOf(Math.toDegrees(orientationAngles[2])));
-            pm.x.setText(String.valueOf(Math.toDegrees(inclinacion)));
+            pg.x.setText(String.valueOf(Math.round(Math.toDegrees(orientationAngles[0]))));
+            pg.y.setText(String.valueOf(Math.round(Math.toDegrees(orientationAngles[1]))));
+            pg.z.setText(String.valueOf(Math.round(Math.toDegrees(orientationAngles[2]))));
+            pm.x.setText(String.valueOf(Math.round(Math.toDegrees(inclinacion))));
         }
 
         @Override
