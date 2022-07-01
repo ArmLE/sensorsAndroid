@@ -134,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
             updateOrientationAngles();
 
             System.out.println(Arrays.toString(orientationAngles));
+
+            pg.x.setText(String.valueOf(orientationAngles[0]*57.2958));
+            pg.y.setText(String.valueOf(orientationAngles[1]*57.2958));
+            pg.z.setText(String.valueOf(orientationAngles[2]*57.2958));
         }
 
         @Override
