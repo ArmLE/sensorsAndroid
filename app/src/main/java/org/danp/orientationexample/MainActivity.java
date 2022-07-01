@@ -11,6 +11,8 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
     int whip=0;
@@ -20,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
 
     PointGravity pg;
     PointMagnetic pm;
+
+    float[] accelerometerReading = new float[3];
+    float[] magnetometerReading = new float[3];
+
+    public float[] rotationMatrix = new float[9];
+    public float[] orientationAngles = new float[]{0,0,0};
 
     private class PointGravity{
         public TextView x;
@@ -56,11 +64,15 @@ public class MainActivity extends AppCompatActivity {
       sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
       sensorGra = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
       sensorMag = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+      /*
       if(sensorGra == null || sensorMag == null)
          finish();
+      */
+
+      /*
       sensorManager.registerListener(sensorEventListener, sensorGra,SensorManager.SENSOR_DELAY_NORMAL);
       sensorManager.registerListener(sensorEventListener, sensorMag,SensorManager.SENSOR_DELAY_NORMAL);
-
+      */
       pg = new PointGravity((TextView)findViewById(R.id.gX),(TextView)findViewById(R.id.gY),(TextView)findViewById(R.id.gZ));
       pm = new PointMagnetic((TextView)findViewById(R.id.mX),(TextView)findViewById(R.id.mY),(TextView)findViewById(R.id.mZ));
     }
@@ -68,9 +80,25 @@ public class MainActivity extends AppCompatActivity {
     private SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
+            /*
             float gfX = 0,gfY,gfZ;
             float mfX,mfY,mfZ;
+            */
+            start();
 
+            SensorManager.getRotationMatrix(rotationMatrix, null,
+                    accelerometerReading, magnetometerReading);
+            SensorManager.getOrientation(rotationMatrix, orientationAngles);
+
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                System.arraycopy(event.values, 0, accelerometerReading,
+                        0, accelerometerReading.length);
+            } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+                System.arraycopy(event.values, 0, magnetometerReading,
+                        0, magnetometerReading.length);
+            }
+
+            /*
             if(event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
                 gfX= event.values[0];
                 gfY= event.values[1];
@@ -79,8 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 pg.x.setText(String.valueOf(gfX));
                 pg.y.setText(String.valueOf(gfY));
                 pg.z.setText(String.valueOf(gfZ));
-            }
-            if(event.sensor.getType()==Sensor.TYPE_MAGNETIC_FIELD){
+            }else if(event.sensor.getType()==Sensor.TYPE_MAGNETIC_FIELD){
                 mfX= event.values[0];
                 mfY= event.values[1];
                 mfZ= event.values[2];
@@ -102,21 +129,34 @@ public class MainActivity extends AppCompatActivity {
                 sound();
                 whip=0;
             }
-            /*
-            for(int i=0; i < event.values.length;i++){
-                Log.d("VALOR "+i+":",""+event.values[i]);
-            }*/
-            start();
+            */
+
+            updateOrientationAngles();
+
+            System.out.println(Arrays.toString(orientationAngles));
         }
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
         }
+
+        public void updateOrientationAngles() {
+            // Update rotation matrix, which is needed to update orientation angles.
+            SensorManager.getRotationMatrix(rotationMatrix, null,
+                    accelerometerReading, magnetometerReading);
+
+            // "mRotationMatrix" now has up-to-date information.
+
+            SensorManager.getOrientation(rotationMatrix, orientationAngles);
+
+            // "mOrientationAngles" now has up-to-date information.
+        }
     };
     //start();
     private void start(){
         sensorManager.registerListener(sensorEventListener, sensorGra,SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, sensorMag,SensorManager.SENSOR_DELAY_NORMAL);
     }
     private void stop(){
         sensorManager.unregisterListener(sensorEventListener);
