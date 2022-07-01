@@ -2,12 +2,10 @@ package org.danp.orientationexample;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -15,7 +13,6 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    int whip=0;
     SensorManager sensorManager;
     Sensor sensorGra;
     Sensor sensorMag;
@@ -62,15 +59,7 @@ public class MainActivity extends AppCompatActivity {
       sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
       sensorGra = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
       sensorMag = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-      /*
-      if(sensorGra == null || sensorMag == null)
-         finish();
-      */
 
-      /*
-      sensorManager.registerListener(sensorEventListener, sensorGra,SensorManager.SENSOR_DELAY_NORMAL);
-      sensorManager.registerListener(sensorEventListener, sensorMag,SensorManager.SENSOR_DELAY_NORMAL);
-      */
       pg = new PointGravity((TextView)findViewById(R.id.gX),(TextView)findViewById(R.id.gY),(TextView)findViewById(R.id.gZ));
       pm = new PointMagnetic((TextView)findViewById(R.id.mX));
     }
@@ -78,10 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
-            /*
-            float gfX = 0,gfY,gfZ;
-            float mfX,mfY,mfZ;
-            */
+
             start();
 
             SensorManager.getRotationMatrix(rotationMatrix, inclinationMatrix,
@@ -97,38 +83,6 @@ public class MainActivity extends AppCompatActivity {
                         0, magnetometerReading.length);
             }
 
-            /*
-            if(event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
-                gfX= event.values[0];
-                gfY= event.values[1];
-                gfZ= event.values[2];
-
-                pg.x.setText(String.valueOf(gfX));
-                pg.y.setText(String.valueOf(gfY));
-                pg.z.setText(String.valueOf(gfZ));
-            }else if(event.sensor.getType()==Sensor.TYPE_MAGNETIC_FIELD){
-                mfX= event.values[0];
-                mfY= event.values[1];
-                mfZ= event.values[2];
-
-                pm.x.setText(String.valueOf(mfX));
-                pm.y.setText(String.valueOf(mfY));
-                pm.z.setText(String.valueOf(mfZ));
-            }
-
-            System.out.println("valor giro " + gfX);
-            if(gfX<-5 && whip==0){
-                whip++;
-                getWindow().getDecorView().setBackgroundColor(Color.BLUE);
-            }else if(gfX>5 && whip==1){
-                whip++;
-                getWindow().getDecorView().setBackgroundColor(Color.RED);
-            }
-            if(whip==2){
-                sound();
-                whip=0;
-            }
-            */
 
             updateOrientationAngles();
 
@@ -165,10 +119,7 @@ public class MainActivity extends AppCompatActivity {
     private void stop(){
         sensorManager.unregisterListener(sensorEventListener);
     }
-    private void sound(){
-        MediaPlayer mediaPlayer= MediaPlayer.create(this,R.raw.latigo);
-        mediaPlayer.start();
-    }
+
     @Override
     protected void onPause(){
         stop();
